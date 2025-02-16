@@ -10,7 +10,7 @@
   <mat-card-content>Tasks</mat-card-content>
   <ul style="list-style-type: none;">
     <li *ngFor="let task of tasks">
-      <mat-checkbox (change)="complete(task.id)" [(ngModel)]="task.completed" [disabled]="task.completed" [class.completed]="task.completed">
+      <mat-checkbox ngDefaultControl (change)="complete(task.id)" [(ngModel)]="task.completed" [disabled]="task.completed" [class.completed]="task.completed">
         {{task.text}}
       </mat-checkbox>
     </li>

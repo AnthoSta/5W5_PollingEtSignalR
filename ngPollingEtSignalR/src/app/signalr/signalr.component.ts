@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 
+
 @Component({
   selector: 'app-signalr',
   standalone: true,
@@ -27,23 +28,38 @@ export class SignalrComponent implements OnInit {
     this.connecttohub()
   }
 
-  connecttohub() {
+ connecttohub() {
     // TODO On doit commencer par créer la connexion vers le Hub
-   
+    this.hubConnection = new signalR.HubConnectionBuilder()
+                              .withUrl('https://localhost:7289/matchHub')
+                              .build();
     // TODO On peut commencer à écouter pour les évènements qui vont déclencher des callbacks
-    
+    this.hubConnection!.on('TaskList', (data) => {
+        console.log(data);
+        this.tasks = data
+    });
+    this.hubConnection!.on('UserCount', (data) => {
+      this.usercount = data
+      console.log(data);
+  });
     // TODO On doit ensuite se connecter
-    
+    this.hubConnection
+    .start()
+    .then(() => {
+        console.log('La connexion est active!');
+      })
+    .catch(err => console.log('Error while starting connection: ' + err));
   }
 
   complete(id: number) {
     // TODO On invoke la méthode pour compléter une tâche sur le serveur
-   
+    this.hubConnection!.invoke('Complete', id);
   }
 
   addtask() {
     // TODO On invoke la méthode pour ajouter une tâche sur le serveur
-    
+    this.hubConnection!.invoke('AjouterUneTache', this.taskname);
   }
+
 
 }
